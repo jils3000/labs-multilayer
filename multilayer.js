@@ -13,11 +13,12 @@ var multilayer = angular.module('multilayer', []);
 multilayer.controller('SelectorCtrl', function ($scope) {
     var cartodbLayers = [];
 
-    function addLayer(id, show) {
+    function addLayer(id, show, map) {
         return function (layer) {
             if (!show) {
                 layer.hide();
             }
+            cdb.vis.Vis.addInfowindow(map, layer.getSubLayer(0), ['cartodb_id'])
             cartodbLayers[id] = layer;
         };
     }
@@ -73,7 +74,7 @@ multilayer.controller('SelectorCtrl', function ($scope) {
                     }
                     cartodb.createLayer(map, layerOptions)
                         .addTo(map)
-                        .done(addLayer(id, layer.show))
+                        .done(addLayer(id, layer.show, map))
                         .error(function (error) {
                             console.log("error: " + error);
                         });
